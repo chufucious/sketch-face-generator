@@ -6,12 +6,12 @@ var loadImages = function(dataPath, groupName, pictureName){
 		var imagesCollection = [],
 			fileManager = [NSFileManager defaultManager];
 
-		if(tools.majorVersion() == 3){			
-			var scriptPath = sketch.scriptPath;			
+		if(tools.majorVersion() == 3){
+			var scriptPath = sketch.scriptPath;
 			var pluginFolder = scriptPath.match(/Plugins\/([\w -])*/)[0] + "/";
 			var sketchPluginsPath = scriptPath.replace(/Plugins([\w \/ -])*.sketchplugin$/, "");
 			imagesPath =  sketchPluginsPath + pluginFolder + dataPath;
-		}	
+		}
 		log(imagesPath)
 		var imagesFileNames = [fileManager contentsOfDirectoryAtPath:imagesPath error:nil],
 			imgLen = [imagesFileNames count];
@@ -19,8 +19,8 @@ var loadImages = function(dataPath, groupName, pictureName){
 		for(var i = 0; i < imgAmount; i++){
 			var r = Math.floor(Math.random() * imgLen);
 			var fileName = imagesPath+imagesFileNames[r];
-			if ([fileManager fileExistsAtPath: fileName]) {				
-				var newImage = [[NSImage alloc] initWithContentsOfFile:fileName];			
+			if ([fileManager fileExistsAtPath: fileName]) {
+				var newImage = [[NSImage alloc] initWithContentsOfFile:fileName];
 				imagesCollection.push(newImage);
 			}
 		}
@@ -28,7 +28,7 @@ var loadImages = function(dataPath, groupName, pictureName){
 		return imagesCollection;
 	}
 
-	function main(){		
+	function main(){
 		var allLayers = [[doc currentPage] layers],
 			imagesCollection = loadImages([selection count]);
 
@@ -37,15 +37,15 @@ var loadImages = function(dataPath, groupName, pictureName){
             if([layer class] == MSShapeGroup){
                 var image = imagesCollection[i];
                 var fill = layer.style().fills().firstObject();
-                fill.setFillType(4);                
+                fill.setFillType(4);
                 log(tools.minorVersion())
                 if(tools.minorVersion() >= 1){
-                	var coll = layer.style().fills().firstObject().documentData().images();              
+                	var coll = layer.style().fills().firstObject().documentData().images();
                 	[fill setPatternImage:image collection:coll]
                 }
                 else{
                 	layer.style().fills().firstObject().setPatternImage( image );
-                }                                                
+                }
                 layer.style().fills().firstObject().setPatternFillType(1);
             }
 		}
